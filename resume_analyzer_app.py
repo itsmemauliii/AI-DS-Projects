@@ -17,7 +17,7 @@ if st.button("Analyze"):
             categories_df = pd.read_csv(uploaded_categories_file)
 
             # Check if the required columns exist
-            if 'Category' not in categories_df.columns or 'Resumes' not in categories_df.columns:
+            if 'category' not in categories_df.columns or 'resumes' not in categories_df.columns:
                 st.error("CSV must contain 'category' and 'resumes' columns.")
             else:
                 # Process the uploaded resume
@@ -28,8 +28,8 @@ if st.button("Analyze"):
                     # Check for matches in the resumes column
                     matched_categories = []
                     for index, row in categories_df.iterrows():
-                        if row['Resumes'] in resume_cleaned:
-                            matched_categories.append(row['Category'])
+                        if row['resumes'] in resume_cleaned:
+                            matched_categories.append(row['category'])
 
                     # Display results
                     st.subheader("Matched Categories")
