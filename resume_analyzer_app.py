@@ -109,3 +109,5 @@ if not job_description:
 
 uploaded_file = st.file_uploader("Upload Resumes (PDFs only):", type=["pdf"])
 uploaded_file = st.file_uploader("Upload CSV File (containing resumes and categories):", type=["csv"])
+import nltk
+nltk.download('punkt')
