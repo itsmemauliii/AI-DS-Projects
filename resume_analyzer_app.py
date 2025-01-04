@@ -9,23 +9,29 @@ def extract_text_from_pdf(pdf_path):
     return text
 
 import re
+import nltk
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
+# Ensure stopwords are downloaded
+nltk.download('stopwords')
+
+# Load stopwords in English
 stop_words = set(stopwords.words("english"))
+
 lemmatizer = WordNetLemmatizer()
 
 def preprocess_text(text):
-    # Lowercase text
-    text = text.lower()
+    # Tokenize the text
+    words = word_tokenize(text)
+    # Remove stopwords and lemmatize
+    words = [lemmatizer.lemmatize(word) for word in words if word.lower() not in stop_words]
+    return ' '.join(words)
     # Remove special characters
     text = re.sub(r"[^a-zA-Z\s]", "", text)
     # Tokenize and remove stopwords
     tokens = [word for word in word_tokenize(text) if word not in stop_words]
-    # Lemmatize words
-    tokens = [lemmatizer.lemmatize(word) for word in tokens]
-    return " ".join(tokens)
     
 import streamlit as st
 
