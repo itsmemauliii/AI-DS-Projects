@@ -14,34 +14,34 @@ if st.button("Analyze"):
             categories_df = pd.read_csv(uploaded_categories_file)
 
             # Check if the required columns exist
-            if 'Category' not in categories_df.columns or 'Resume' not in categories_df.columns:
-                st.error("CSV must contain 'Category' and 'Resume' columns.")
+            if 'category' not in categories_df.columns or 'resumes' not in categories_df.columns:
+                st.error("CSV must contain 'category' and 'resumes' columns.")
             else:
                 # Initialize a list to store results
                 results = []
 
                 # Process each resume in the CSV
                 for index, row in categories_df.iterrows():
-                    resume_text = row['Resume']
+                    resume_text = row['resumes']
                     if resume_text:
                         # Assuming resume_text is a path to the PDF file
                         resume_cleaned = preprocess_text(resume_text)
 
                         # Check for matches in the resumes column
                         matched_categories = []
-                        if row['Resume'] in resume_cleaned:
-                            matched_categories.append(row['Category'])
+                        if row['resumes'] in resume_cleaned:
+                            matched_categories.append(row['category'])
 
                         # Store the result
                         results.append({
-                            'Resume': resume_text,
+                            'resume': resume_text,
                             'matched_categories': matched_categories
                         })
 
                 # Display results
                 st.subheader("Analysis Results")
                 for result in results:
-                    st.write(f"Resume: {result['Resume']}")
+                    st.write(f"Resume: {result['resume']}")
                     if result['matched_categories']:
                         st.write(f"Matched Categories: {', '.join(result['matched_categories'])}")
                     else:
@@ -49,4 +49,4 @@ if st.button("Analyze"):
         except Exception as e:
             st.error(f"Error loading categories from CSV: {e}")
     else:
-        st.error("Please upload a categories CSV file before analyzing.")
+        st.error("Please upload
