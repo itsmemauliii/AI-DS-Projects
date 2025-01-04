@@ -1,32 +1,41 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from utils import extract_text_from_pdf, preprocess_text, extract_skills, calculate_similarity, plot_scores, create_results_table, filter_results
+from utils import extract_text_from_pdf, preprocess_text, extract_skills
 
 st.title("AI-Powered Resume Analyzer")
 
-uploaded_resumes = st.file_uploader("Upload Resumes (PDF only)", accept_multiple_files=True, type=["pdf"])
-job_description = st.text_area("Enter Job Description")
+# File uploader for resumes
+uploaded_resume = st.file_uploader("Upload Your Resume (PDF only)", type=["pdf"])
+
+# File uploader for skills CSV
+uploaded_skills_file = st.file_uploader("Upload Skills CSV", type=["csv"])
 
 if st.button("Analyze"):
-    if uploaded_resumes and job_description:
-        resumes = [extract_text_from_pdf(resume) for resume in uploaded_resumes]
-        resumes_cleaned = [preprocess_text(text) for text in resumes]
-        job_desc_cleaned = preprocess_text(job_description)
+    if uploaded_resume and uploaded_skills_file:
+        # Load skills from the uploaded CSV file
+        try:
+            skills_df = pd.read_csv(uploaded_skills_file)
+            skills_list = skills_df['skills'].dropna().tolist()  # Adjust the column name as necessary
+        except Exception as e:
+            st.error(f"Error loading skills from CSV: {e}")
+            skills_list = []
 
-        scores = calculate_similarity(resumes_cleaned, job_desc_cleaned)
+        # Process the uploaded resume
+        resume_text = extract_text_from_pdf(uploaded_resume)
+        if resume_text:
+            resume_cleaned = preprocess_text(resume_text)
 
-        top_n = st.slider("Top Matches to Display", min_value=1, max_value=len(scores), value=5)
-        min_score = st.slider("Minimum Similarity Score (%)", min_value=0, max_value=100, value=50)
-        filtered_resumes, filtered_scores = filter_results(scores, uploaded_resumes, top_n=top_n, min_score=min_score / 100)
+            # Extract matched skills
+            matched_skills = extract_skills(resume_cleaned, skills_list)
 
-        st.subheader("Matching Results")
-        create_results_table(filtered_scores, filtered_resumes)
-        plot_scores(filtered_scores, filtered_resumes)
-
-        st.subheader("Matched Skills")
-        for i, resume in enumerate(filtered_resumes):
-            matched_skills = extract_skills(resumes_cleaned[i])
-            st.write(f"Resume: {resume.name} | Matched Skills: {', '.join(matched_skills)}")
+            # Display results
+            st.subheader("Matched Skills")
+            if matched_skills:
+                st.write(f"Your resume contains the following skills: {', '.join(matched_skills)}")
+            else:
+                st.write("No skills matched from the uploaded skills dataset.")
+        else:
+            st.error("Failed to extract text from the resume.")
     else:
-        st.error("Please upload resumes and enter a job description before analyzing.")
+        st.error("Please upload your resume and a skills CSV file before analyzing.")
