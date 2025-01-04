@@ -6,22 +6,20 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
 # Ensure required nltk resources are downloaded
-# This part is no longer needed since we downloaded them separately
-# Uncomment if you want to check for resources at runtime
-# try:
-#     nltk.data.find('tokenizers/punkt')
-# except LookupError:
-#     nltk.download('punkt')
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
 
-# try:
-#     nltk.data.find('corpora/stopwords')
-# except LookupError:
-#     nltk.download('stopwords')
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords')
 
-# try:
-#     nltk.data.find('corpora/wordnet')
-# except LookupError:
-#     nltk.download('wordnet')
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    nltk.download('wordnet')
 
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
