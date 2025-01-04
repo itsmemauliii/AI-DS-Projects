@@ -96,3 +96,6 @@ if st.button("Analyze"):
             st.write(f"Resume: {resume.name} | Matched Skills: {', '.join(matched_skills)}")
     else:
         st.error("Please upload resumes and enter a job description before analyzing.")
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
