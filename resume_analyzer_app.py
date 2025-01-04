@@ -38,12 +38,13 @@ import streamlit as st
 st.title("AI-Powered Resume Analyzer")
 
 uploaded_resumes = st.file_uploader("Upload Resumes (PDF only)", accept_multiple_files=True, type=["pdf"])
-job_desc = st.text_area("Enter Job Description")
+job_description = st.text_area("Enter Job Description")
 
 if st.button("Analyze"):
-    resumes_text = [extract_text_from_pdf(resume) for resume in uploaded_resumes]
-    resumes_cleaned = [preprocess_text(resume) for resume in resumes_text]
-    job_desc_cleaned = preprocess_text(job_desc)
+    resumes = [extract_text_from_pdf(resume) for resume in uploaded_resumes]
+    resumes_cleaned = [preprocess_text(resume) for resume in resumes]
+    job_desc_cleaned = preprocess_text(job_description)
+
     
     scores = calculate_similarity(resumes_cleaned, job_desc_cleaned)
     st.pyplot(plot_scores(scores, uploaded_resumes))
@@ -70,7 +71,7 @@ def plot_scores(scores, resumes):
     
 def highlight_skills(resume, job_desc):
     resume_skills = set(extract_skills(resume))
-    job_skills = set(extract_skills(job_desc))
+    job_skills = set(extract_skills(job_description))
     matched = resume_skills & job_skills
     return matched
 
@@ -80,11 +81,6 @@ st.write(f"Matched Skills: {', '.join(matched_skills)}")
 import pandas as pd
 
 def create_results_table(scores, resumes):
-    """
-    Create a DataFrame for results and display it as a Streamlit table.
-    :param scores: List of similarity scores.
-    :param resumes: List of uploaded resume files.
-    """
     data = {
         "Resume": [resume.name for resume in resumes],
         "Similarity Score (%)": [round(score * 100, 2) for score in scores]
@@ -94,14 +90,7 @@ def create_results_table(scores, resumes):
     st.dataframe(df)
 
 def filter_results(scores, resumes, top_n=None, min_score=None):
-    """
-    Apply filters to results based on top N matches or minimum score.
-    :param scores: List of similarity scores.
-    :param resumes: List of uploaded resume files.
-    :param top_n: Number of top matches to display.
-    :param min_score: Minimum score threshold.
-    :return: Filtered scores and resumes.
-    """
+   
     results = sorted(zip(resumes, scores), key=lambda x: x[1], reverse=True)
     
     if min_score is not None:
@@ -118,9 +107,9 @@ uploaded_resumes = st.file_uploader("Upload Resumes (PDF only)", accept_multiple
 job_desc = st.text_area("Enter Job Description")
 
 if st.button("Analyze"):
-    resumes_text = [extract_text_from_pdf(resume) for resume in uploaded_resumes]
-    resumes_cleaned = [preprocess_text(text) for text in resumes_text]
-    job_desc_cleaned = preprocess_text(job_desc)
+    resumes = [extract_text_from_pdf(resume) for resume in uploaded_resumes]
+    resumes_cleaned = [preprocess_text(text) for text in resumes]
+    job_desc_cleaned = preprocess_text(job_description)
     
     # Calculate scores
     scores = calculate_similarity(resumes_cleaned, job_desc_cleaned)
