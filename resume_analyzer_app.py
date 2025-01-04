@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 from utils import extract_text_from_pdf, preprocess_text
 
 st.title("AI-Powered Resume Analyzer")
@@ -16,8 +15,9 @@ if st.button("Analyze"):
         # Load categories and resumes from the uploaded CSV file
         try:
             categories_df = pd.read_csv(uploaded_categories_file)
-            # Ensure the required columns exist
-            if 'category' not in categories_df.columns or 'resumes' not in categories_df.columns:
+
+            # Check if the required columns exist
+            if 'Category' not in categories_df.columns or 'Resumes' not in categories_df.columns:
                 st.error("CSV must contain 'category' and 'resumes' columns.")
             else:
                 # Process the uploaded resume
@@ -28,8 +28,8 @@ if st.button("Analyze"):
                     # Check for matches in the resumes column
                     matched_categories = []
                     for index, row in categories_df.iterrows():
-                        if row['resumes'] in resume_cleaned:
-                            matched_categories.append(row['category'])
+                        if row['Resumes'] in resume_cleaned:
+                            matched_categories.append(row['Category'])
 
                     # Display results
                     st.subheader("Matched Categories")
