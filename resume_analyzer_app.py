@@ -106,16 +106,6 @@ if not uploaded_resumes:
     st.error("No resumes uploaded. Please upload at least one PDF.")
 if not job_description:
     st.error("Job description is empty. Please enter a job description.")
-uploaded_resumes = st.file_uploader(
-    "Upload Resumes (PDFs only):", type=["pdf"], accept_multiple_files=True
-)
-if uploaded_resumes:
-    for uploaded_file in uploaded_resumes:
-        file_details = {"filename": uploaded_file.name, "filetype": uploaded_file.type}
-        st.write(file_details)
-else:
-    st.error("No resumes uploaded. Please upload at least one PDF.")
 
-st.info("Please upload your resume as a PDF, or upload a CSV file if analyzing multiple resumes.")
 uploaded_file = st.file_uploader("Upload Resumes (PDFs only):", type=["pdf"])
 uploaded_file = st.file_uploader("Upload CSV File (containing resumes and categories):", type=["csv"])
