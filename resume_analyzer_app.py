@@ -116,3 +116,4 @@ if uploaded_resumes:
 else:
     st.error("No resumes uploaded. Please upload at least one PDF.")
 
+st.info("Please upload your resume as a PDF, or upload a CSV file if analyzing multiple resumes.")
