@@ -14,23 +14,23 @@ if st.button("Analyze"):
             categories_df = pd.read_csv(uploaded_categories_file)
 
             # Check if the required columns exist
-            if 'category' not in categories_df.columns or 'resumes' not in categories_df.columns:
-                st.error("CSV must contain 'category' and 'resumes' columns.")
+            if 'Category' not in categories_df.columns or 'Resume' not in categories_df.columns:
+                st.error("CSV must contain 'Category' and 'Resume' columns.")
             else:
                 # Initialize a list to store results
                 results = []
 
                 # Process each resume in the CSV
                 for index, row in categories_df.iterrows():
-                    resume_text = row['resumes']
+                    resume_text = row['Resume']
                     if resume_text:
-                        # Assuming resume_text is a path to the PDF file
+                        # Preprocess the resume text
                         resume_cleaned = preprocess_text(resume_text)
 
                         # Check for matches in the resumes column
                         matched_categories = []
-                        if row['resumes'] in resume_cleaned:
-                            matched_categories.append(row['category'])
+                        if resume_cleaned:  # Ensure resume_cleaned is not empty
+                            matched_categories.append(row['Category'])
 
                         # Store the result
                         results.append({
