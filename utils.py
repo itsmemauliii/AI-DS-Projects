@@ -10,9 +10,20 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Ensure required nltk resources are downloaded
-nltk.download('stopwords')
-nltk.download('punkt')
-nltk.download('wordnet')
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download('punkt')
+
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords')
+
+try:
+    nltk.data.find('corpora/wordnet')
+except LookupError:
+    nltk.download('wordnet')
 
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
@@ -63,10 +74,6 @@ def create_results_table(scores, resumes):
     df = df.sort_values(by="Similarity Score (%)", ascending=False)
     return df
 
-def filter_results(scores, resumes, top_n=None, min_score=None):
-    results = sorted(zip(resumes, scores), key=lambda x: x[1], reverse=True)
-    if min_score is not None:
-        results = [(res, score) for res, score in results if score >= min_score]
-    if top_n is not None:
-        results = results[:top_n]
-   
+def filter ```python
+def filter_resumes_by_score(df, threshold=50):
+    return df[df["Similarity Score (%)"] >= threshold]
