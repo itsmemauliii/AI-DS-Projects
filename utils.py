@@ -60,4 +60,13 @@ def plot_scores(scores, resumes):
 def create_results_table(scores, resumes):
     data = {"Resume": [resume.name for resume in resumes], "Similarity Score (%)": [round(score * 100, 2) for score in scores]}
     df = pd.DataFrame(data)
-    df = df
+    df = df.sort_values(by="Similarity Score (%)", ascending=False)
+    return df
+
+def filter_results(scores, resumes, top_n=None, min_score=None):
+    results = sorted(zip(resumes, scores), key=lambda x: x[1], reverse=True)
+    if min_score is not None:
+        results = [(res, score) for res, score in results if score >= min_score]
+    if top_n is not None:
+        results = results[:top_n]
+   
