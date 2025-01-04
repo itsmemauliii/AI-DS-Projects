@@ -2,45 +2,39 @@ import PyPDF2
 import re
 import nltk
 import streamlit as st
-import pandas as pd
 import matplotlib.pyplot as plt
+import pandas as pd
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
-# Ensure NLTK resources are available
+# Ensure required nltk resources are downloaded
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
 
-# Load stopwords and initialize lemmatizer
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
 
-# Function to extract text from PDF
-def extract_text_from_pdf(pdf_path):
+# Function to extract text from uploaded PDF files
+def extract_text_from_pdf(uploaded_file):
     text = ""
-    with open(pdf_path, "rb") as file:
-        reader = PyPDF2.PdfReader(file)
-        for page in reader.pages:
-            text += page.extract_text()
+    reader = PyPDF2.PdfReader(uploaded_file)
+    for page in reader.pages:
+        text += page.extract_text() or ""
     return text
 
 # Function to preprocess text
 def preprocess_text(text):
     text = re.sub(r"[^a-zA-Z\s]", "", text)  # Remove special characters
-    words = word_tokenize(text.lower())  # Tokenize and convert to lowercase
-    words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]  # Remove stopwords and lemmatize
+    words = word_tokenize(text)  # Tokenize text
+    words = [lemmatizer.lemmatize(word) for word in words if word.lower() not in stop_words]  # Remove stopwords and lemmatize
     return ' '.join(words)
 
 # Function to extract skills from text
-def extract_skills(text, skills_list):
-    return [skill for skill in skills_list if skill.lower() in text.lower()]
-
-# Function to calculate similarity (example placeholder)
-def calculate_similarity(resumes_cleaned, job_desc_cleaned):
-    # Placeholder logic for calculating similarity
-    return [len(set(resume.split()) & set(job_desc_cleaned.split())) / len(set(job_desc_cleaned.split())) for resume in resumes_cleaned]
+def extract_skills(text):
+    skills = ["python", "sql", "tableau", "machine learning", "deep learning"]
+    return [skill for skill in skills if skill.lower() in text.lower()]
 
 # Function to plot similarity scores
 def plot_scores(scores, resumes):
@@ -51,14 +45,7 @@ def plot_scores(scores, resumes):
     plt.title("Resume Matching Scores")
     st.pyplot(plt)
 
-# Function to highlight matched skills
-def highlight_skills(resume, job_desc, skills_list):
-    resume_skills = set(extract_skills(resume, skills_list))
-    job_skills = set(extract_skills(job_desc, skills_list))
-    matched = resume_skills & job_skills
-    return matched
-
-# Function to create a results table
+# Function to create results table
 def create_results_table(scores, resumes):
     data = {
         "Resume": [resume.name for resume in resumes],
@@ -68,7 +55,7 @@ def create_results_table(scores, resumes):
     df = df.sort_values(by="Similarity Score (%)", ascending=False)
     st.dataframe(df)
 
-# Function to filter results based on user input
+# Function to filter results based on criteria
 def filter_results(scores, resumes, top_n=None, min_score=None):
     results = sorted(zip(resumes, scores), key=lambda x: x[1], reverse=True)
     if min_score is not None:
@@ -77,20 +64,23 @@ def filter_results(scores, resumes, top_n=None, min_score=None):
         results = results[:top_n]
     return zip(*results) if results else ([], [])
 
-# Streamlit UI
+# Function to calculate similarity (dummy implementation)
+def calculate_similarity(resumes_cleaned, job_desc_cleaned):
+    return [0.5 for _ in resumes_cleaned]  # Placeholder similarity score for demonstration
+
+# Streamlit app layout
 st.title("AI-Powered Resume Analyzer")
 
 uploaded_resumes = st.file_uploader("Upload Resumes (PDF only)", accept_multiple_files=True, type=["pdf"])
 job_description = st.text_area("Enter Job Description")
-skills_list = ["python", "sql", "tableau", "machine learning", "deep learning"]
 
 if st.button("Analyze"):
     if uploaded_resumes and job_description:
         resumes = [extract_text_from_pdf(resume) for resume in uploaded_resumes]
-        resumes_cleaned = [preprocess_text(resume) for resume in resumes]
+        resumes_cleaned = [preprocess_text(text) for text in resumes]
         job_desc_cleaned = preprocess_text(job_description)
 
-        # Calculate similarity scores
+        # Calculate scores
         scores = calculate_similarity(resumes_cleaned, job_desc_cleaned)
 
         # Filtering options
@@ -103,9 +93,10 @@ if st.button("Analyze"):
         create_results_table(filtered_scores, filtered_resumes)
         plot_scores(filtered_scores, filtered_resumes)
 
-        # Highlight matched skills for the top resume
-        if filtered_resumes:
-            matched_skills = highlight_skills(resumes_cleaned[0], job_desc_cleaned, skills_list)
-            st.write(f"Matched Skills: {', '.join(matched_skills)}")
+        # Highlight matched skills
+        st.subheader("Matched Skills")
+        for i, resume in enumerate(filtered_resumes):
+            matched_skills = extract_skills(resumes_cleaned[i])
+            st.write(f"Resume: {resume.name} | Matched Skills: {', '.join(matched_skills)}")
     else:
-        st.warning("Please upload at least one resume and enter a job description.")
+        st.error("Please upload resumes and enter a job description before analyzing.")
