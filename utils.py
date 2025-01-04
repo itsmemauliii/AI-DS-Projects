@@ -6,20 +6,22 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
 # Ensure required nltk resources are downloaded
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
+# This part is no longer needed since we downloaded them separately
+# Uncomment if you want to check for resources at runtime
+# try:
+#     nltk.data.find('tokenizers/punkt')
+# except LookupError:
+#     nltk.download('punkt')
 
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords')
+# try:
+#     nltk.data.find('corpora/stopwords')
+# except LookupError:
+#     nltk.download('stopwords')
 
-try:
-    nltk.data.find('corpora/wordnet')
-except LookupError:
-    nltk.download('wordnet')
+# try:
+#     nltk.data.find('corpora/wordnet')
+# except LookupError:
+#     nltk.download('wordnet')
 
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
@@ -40,7 +42,5 @@ def preprocess_text(text):
     words = [lemmatizer.lemmatize(word) for word in words if word.lower() not in stop_words]
     return ' '.join(words)
 
-def extract_skills(text, skill_list_path='skills.txt'):
-    with open(skill_list_path, 'r') as file:
-        skills = [line.strip().lower() for line in file.readlines()]
-    return [skill for skill in skills if skill.lower() in text.lower()]
+def extract_skills(text, skills_list):
+    return [skill for skill in skills_list if skill in text.lower()]
