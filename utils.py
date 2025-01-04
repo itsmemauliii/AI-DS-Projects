@@ -44,5 +44,3 @@ def extract_skills(text, skill_list_path='skills.txt'):
     with open(skill_list_path, 'r') as file:
         skills = [line.strip().lower() for line in file.readlines()]
     return [skill for skill in skills if skill.lower() in text.lower()]
-
-st.error("Please upload a categories CSV file.")
