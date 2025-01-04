@@ -4,14 +4,11 @@ from utils import extract_text_from_pdf, preprocess_text
 
 st.title("AI-Powered Resume Analyzer")
 
-# File uploader for resumes
-uploaded_resume = st.file_uploader("Upload Your Resume (PDF only)", type=["pdf"])
-
 # File uploader for categories CSV
 uploaded_categories_file = st.file_uploader("Upload Categories CSV", type=["csv"])
 
 if st.button("Analyze"):
-    if uploaded_resume and uploaded_categories_file:
+    if uploaded_categories_file:
         # Load categories and resumes from the uploaded CSV file
         try:
             categories_df = pd.read_csv(uploaded_categories_file)
@@ -20,26 +17,36 @@ if st.button("Analyze"):
             if 'category' not in categories_df.columns or 'resumes' not in categories_df.columns:
                 st.error("CSV must contain 'category' and 'resumes' columns.")
             else:
-                # Process the uploaded resume
-                resume_text = extract_text_from_pdf(uploaded_resume)
-                if resume_text:
-                    resume_cleaned = preprocess_text(resume_text)
+                # Initialize a list to store results
+                results = []
 
-                    # Check for matches in the resumes column
-                    matched_categories = []
-                    for index, row in categories_df.iterrows():
+                # Process each resume in the CSV
+                for index, row in categories_df.iterrows():
+                    resume_text = row['resumes']
+                    if resume_text:
+                        # Assuming resume_text is a path to the PDF file
+                        resume_cleaned = preprocess_text(resume_text)
+
+                        # Check for matches in the resumes column
+                        matched_categories = []
                         if row['resumes'] in resume_cleaned:
                             matched_categories.append(row['category'])
 
-                    # Display results
-                    st.subheader("Matched Categories")
-                    if matched_categories:
-                        st.write(f"Your resume matches the following categories: {', '.join(matched_categories)}")
+                        # Store the result
+                        results.append({
+                            'resume': resume_text,
+                            'matched_categories': matched_categories
+                        })
+
+                # Display results
+                st.subheader("Analysis Results")
+                for result in results:
+                    st.write(f"Resume: {result['resume']}")
+                    if result['matched_categories']:
+                        st.write(f"Matched Categories: {', '.join(result['matched_categories'])}")
                     else:
-                        st.write("No categories matched from the uploaded dataset.")
-                else:
-                    st.error("Failed to extract text from the resume.")
+                        st.write("No categories matched.")
         except Exception as e:
             st.error(f"Error loading categories from CSV: {e}")
     else:
-        st.error("Please upload your resume and a categories CSV file before analyzing.")
+        st.error("Please upload a categories CSV file before analyzing.")
