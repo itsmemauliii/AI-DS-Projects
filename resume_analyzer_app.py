@@ -130,10 +130,10 @@ if st.button("Analyze"):
     plot_scores(filtered_scores, filtered_resumes)
 
 import nltk
-from nltk.corpus import stopwords
 
-
-nltk.download("stopwords")
-nltk.download("punkt")
-
-stop_words = set(stopwords.words("english"))
+# Check if the 'stopwords' resource is available
+try:
+    stop_words = set(stopwords.words("english"))
+except LookupError:
+    nltk.download('stopwords')  # Download the 'stopwords' resource
+    stop_words = set(stopwords.words("english"))
