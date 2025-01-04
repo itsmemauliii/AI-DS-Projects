@@ -111,3 +111,14 @@ uploaded_file = st.file_uploader("Upload Resumes (PDFs only):", type=["pdf"])
 uploaded_file = st.file_uploader("Upload CSV File (containing resumes and categories):", type=["csv"])
 import nltk
 nltk.download('punkt')
+import nltk
+
+# Download punkt if not already downloaded
+nltk.download('punkt')
+
+def preprocess_text(text):
+    from nltk.tokenize import word_tokenize
+    words = word_tokenize(text)  # Tokenize text
+    return ' '.join(words)
+
+# Continue with the rest of your script...
