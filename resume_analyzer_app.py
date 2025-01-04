@@ -128,3 +128,12 @@ if st.button("Analyze"):
     st.subheader("Matching Results")
     create_results_table(filtered_scores, filtered_resumes)
     plot_scores(filtered_scores, filtered_resumes)
+
+import nltk
+from nltk.corpus import stopwords
+
+
+nltk.download("stopwords")
+nltk.download("punkt")
+
+stop_words = set(stopwords.words("english"))
