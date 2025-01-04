@@ -117,3 +117,5 @@ else:
     st.error("No resumes uploaded. Please upload at least one PDF.")
 
 st.info("Please upload your resume as a PDF, or upload a CSV file if analyzing multiple resumes.")
+uploaded_file = st.file_uploader("Upload Resumes (PDFs only):", type=["pdf"])
+uploaded_file = st.file_uploader("Upload CSV File (containing resumes and categories):", type=["csv"])
