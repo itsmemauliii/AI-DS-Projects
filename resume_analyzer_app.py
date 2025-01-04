@@ -99,3 +99,16 @@ if st.button("Analyze"):
 nltk.download('stopwords')
 nltk.download('punkt')
 nltk.download('wordnet')
+import nltk
+nltk.data.path.append('./nltk_data')  # Point to the downloaded resources folder
+
+# Your existing NLTK usage
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
+# Ensure resources are loaded
+nltk.download('punkt', download_dir='./nltk_data')
+nltk.download('punkt_tab', download_dir='./nltk_data')
+nltk.download('stopwords', download_dir='./nltk_data')
+nltk.download('wordnet', download_dir='./nltk_data')
