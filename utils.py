@@ -28,6 +28,3 @@ def preprocess_text(text):
     words = word_tokenize(text)  # Tokenize text
     words = [lemmatizer.lemmatize(word) for word in words if word.lower() not in stop_words]
     return ' '.join(words)
-
-def extract_skills(text, skills_list):
-    return [skill for skill in skills_list if skill in text.lower()]
