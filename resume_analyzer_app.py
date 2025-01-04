@@ -100,3 +100,9 @@ if st.button("Analyze"):
             st.write(f"Resume: {resume.name} | Matched Skills: {', '.join(matched_skills)}")
     else:
         st.error("Please upload resumes and enter a job description before analyzing.")
+st.write("Uploaded Resumes:", uploaded_resumes)
+st.write("Job Description:", job_description)
+if not uploaded_resumes:
+    st.error("No resumes uploaded. Please upload at least one PDF.")
+if not job_description:
+    st.error("Job description is empty. Please enter a job description.")
