@@ -49,4 +49,5 @@ if st.button("Analyze"):
         except Exception as e:
             st.error(f"Error loading categories from CSV: {e}")
     else:
-        st.error("Please upload a categories CSV file before analyzing.")
+        st.error("Please upload a categories CSV file.")
+
