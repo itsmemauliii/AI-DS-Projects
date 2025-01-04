@@ -6,20 +6,9 @@ from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 
 # Ensure required nltk resources are downloaded
-try:
-    nltk.data.find('tokenizers/punkt')
-except LookupError:
-    nltk.download('punkt')
-
-try:
-    nltk.data.find('corpora/stopwords')
-except LookupError:
-    nltk.download('stopwords')
-
-try:
-    nltk.data.find('corpora/wordnet')
-except LookupError:
-    nltk.download('wordnet')
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
 
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
@@ -39,6 +28,3 @@ def preprocess_text(text):
     words = word_tokenize(text)  # Tokenize text
     words = [lemmatizer.lemmatize(word) for word in words if word.lower() not in stop_words]
     return ' '.join(words)
-
-def extract_skills(text, skills_list):
-    return [skill for skill in skills_list if skill in text.lower()]
