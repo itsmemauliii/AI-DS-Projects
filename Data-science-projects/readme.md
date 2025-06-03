@@ -58,8 +58,8 @@ This project builds a product recommendation engine that suggests similar unlock
 3. Samsung Galaxy S4 Unlocked - Black  
 
 ## 🎨 Visualization Preview  
-![Similarity Heatmap](images/similarity_heatmap.png)  
-*Cosine similarity between top 10 products*  
+![Visualization](images/visualization.png)  
+*Top 10 products*  
 
 ## 🔮 Future Enhancements  
 - 🖥️ Streamlit/Gradio web interface  
@@ -69,4 +69,4 @@ This project builds a product recommendation engine that suggests similar unlock
 ## 👥 Author  
 **Mauli Patel**  
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue)](https://linkedin.com/in/...)  
-📧 **Contact:** itsmemauliii@gmail.com  
+📧 **Contact:** maulipatel18112003@gmail.com  
