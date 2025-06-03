@@ -1,0 +1,8 @@
+import nltk
+nltk.download("stopwords")
+from nltk.corpus import stopwords
+
+stop_words = stopwords.words("english")
+
+with open("data/stopwords.txt", "w") as f:
+    f.write("\n".join(stop_words))
